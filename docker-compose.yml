@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: prueba-app:dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./src:/app/src
+    networks:
+      - backend
+      - frontend
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: prueba
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  proxy:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "80:80"
+    networks:
+      - frontend
+
+networks:
+  frontend:
+  backend:
+
+volumes:
+  db_data:

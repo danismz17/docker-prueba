@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  app:
+    image: ${REPOSITORIO}/app:latest
+    networks:
+      - frontend
+      - backend
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    networks:
+      - backend
+    volumes:
+      - db_data:/var/lib/postgresql/data
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - frontend
+
+networks:
+  frontend:
+  backend:
+
+volumes:
+  db_data:
